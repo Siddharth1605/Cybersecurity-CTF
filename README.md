@@ -1,2 +1,1 @@
-# Tryhackme
-Tryhackme CTFs exploits, walkthroughs, and notes.
+CTFs exploits, walkthroughs, and notes.
