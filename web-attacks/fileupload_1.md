@@ -39,3 +39,24 @@ For executing a command :
 ```sql
 <?php echo system($_GET['command']); ?>
 ```
+
+## How to properly intercept the request and modify the file type
+
+- First upload a proper fileformat and handle the proxy in burp.
+- Now send the post request in burp to repeater, modify file name and extension.
+- Remove the content and add a php or any server-side scripting one-liner in the content.
+- And post/send the post-request to same path.
+- Again send get-request to the file path with filename along with extension.
+
+If you can find a way to upload a script to a different directory that's not supposed to contain user-supplied files, the server may execute your script after all.
+
+**Tip**
+Web servers often use the `filename` field in `multipart/form-data` requests to determine the name and location where the file should be saved.
+
+You should also note that even though you may send all of your requests to the same domain name, this often points to a reverse proxy server of some kind, such as a load balancer. Your requests will often be handled by additional servers behind the scenes, which may also be configured differently.
+
+### What if server doesn’t allow to execute a file in the directory
+
+- We initially try to upload the file in previous directory like file name as ../filename
+- But some servers will reject the ../ and just put filename for more security, which means the file will be stored in same directory.
+- For that we can bypass this by using some commands and i used %2f in portswigger.
