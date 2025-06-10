@@ -60,3 +60,64 @@ You should also note that even though you may send all of your requests to the s
 - We initially try to upload the file in previous directory like file name as ../filename
 - But some servers will reject the ../ and just put filename for more security, which means the file will be stored in same directory.
 - For that we can bypass this by using some commands and i used %2f in portswigger.
+
+## Web-server will execute a php file only if:
+
+```sql
+/etc/apache2/apache2.conf -> this file contains 
+
+LoadModule php_module /usr/lib/apache2/modules/libphp.so
+    AddType application/x-httpd-php .php
+```
+
+Can modify file extension and upload : 
+
+```sql
+.php to .php5 or .html to .html5/.shtml
+```
+
+## Overriding Server Configuration
+
+```sql
+web.config  -> This file can be overriden in some servers:
+
+<staticContent>
+    <mimeMap fileExtension=".json" mimeType="application/json" />
+</staticContent>
+```
+
+## **Web shell upload via extension blacklist bypass**
+
+Here you can see in response, we are communicating with apache server.
+
+Now change the filename to .htaccess which is the configuration file, and we’re modifying the server to accept the files with extension .133t(can be anything)
+
+Now we’re passing our php one-liner, which will be executed as inner code not outer extension
+
+Now it got executed properly
+
+While checking file extensions, some time there could be no case-sensitive.
+
+can follow this
+
+- Provide multiple extensions. Depending on the algorithm used to parse the filename, the following file may be interpreted as either a PHP file or JPG image: `exploit.php.jpg`
+- Add trailing characters. Some components will strip or ignore trailing whitespaces, dots, and suchlike: `exploit.php.`
+- Try using the URL encoding (or double URL encoding) for dots, forward slashes, and backward slashes. If the value isn't decoded when validating the file extension, but is later decoded server-side, this can also allow you to upload malicious files that would otherwise be blocked: `exploit%2Ephp`
+- Add semicolons or URL-encoded null byte characters before the file extension. If validation is written in a high-level language like PHP or Java, but the server processes the file using lower-level functions in C/C++, for example, this can cause discrepancies in what is treated as the end of the filename: `exploit.asp;.jpg` or `exploit.asp%00.jpg`
+- Try using multibyte unicode characters, which may be converted to null bytes and dots after unicode conversion or normalization. Sequences like `xC0 x2E`, `xC4 xAE` or `xC0 xAE` may be translated to `x2E` if the filename parsed as a UTF-8 string, but then converted to ASCII characters before being used in a path.
+
+But if the server strips the file-extension:
+
+if you strip `.php` from the following filename:
+
+```
+exploit.p.phphp -> exploit.php
+```
+
+and sometimes we can use
+
+```
+exploit.php.%00.jpg -> server will see it as jpg extension and null character before the extension,
+so server will allow
+but it'll store as : exploit.php
+```
