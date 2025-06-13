@@ -20,3 +20,4 @@ Nowadays servers won’t execute a file directly it’ll place them in secondary
 Or we can provide file as link format, server will fetch it and store it and execute it. Fetching will be done by http, so there won’t be proper validations.
 
 If the uploaded file seems to be both stored and served securely, the last resort is to try exploiting vulnerabilities specific to the parsing or processing of different file formats. For example, you know that the server parses XML-based files, such as Microsoft Office `.doc` or `.xls` files, this may be a potential vector for XXE injection attacks.
+.
