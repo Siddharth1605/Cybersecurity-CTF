@@ -40,3 +40,50 @@ Some misconfigured servers, will block ip if it tries to login using wrong infor
 Tip:
 
 Click  **Resource pool** to open the **Resource pool** side panel, then add the attack to a resource pool with **Maximum concurrent requests** set to `1`. By only sending one request at a time, you can ensure that your login attempts are sent to the server in the correct order.
+
+# Account Locking :
+
+| Concept | Explanation |
+| --- | --- |
+| **Account Locking** | Blocks brute-force by locking accounts after repeated failed attempts. |
+| **Vulnerability 1** | Server messages can leak valid usernames (enumeration). |
+| **Vulnerability 2** | Can be bypassed by trying only a few passwords per account across many users (spread attack). |
+| **Vulnerability 3** | Doesn’t stop credential stuffing since each login is only attempted once per account. |
+
+### **Account Enumeration Risk:**
+
+ If an attacker tries to login multiple times, using multiple accounts, like each account 5 times, and for one account he gets “Account locked” error and for other he gets “Invalid information”, then he can understand  that one account’s username is proper.
+
+### Attacking *Any* Account, Not a Specific One :
+
+An attacker needs only one account, even if [user1@gmail.com](mailto:user1@gmail.com) is locked, he can try with user2@gmail.com, as long as he wants to get into the system.
+
+### Credential Stuff:
+
+From security breach many datas are leaked across multiple websites. Attacker can get that username:password from leaked data and use it here. As many people use common credentials across website and also attacker won’t be blocked by the system as he uses one username and one password only one time.
+
+So to find username by this Account Lock, we can have a set of usernames and need to try each usernames 4-5 times, for this we use clusterbomb attack, which is like 
+
+```bash
+for username in usernames:
+
+	for time in times:
+
+		try username-givenpassword
+```
+
+`username=§invalid-username§&password=example§§` → null payload in end for repeating purpose
+
+By this either status/response/length will vary from rest. From there find username
+
+Then using bruteforce we can find password
+
+| Concept | Explanation |
+| --- | --- |
+| **User Rate Limiting** | Blocks IP after too many requests; better than account lock but bypassable |
+| **Bypass Techniques** | IP spoofing, header tampering, multiple guesses per request |
+| **HTTP Basic Auth** | Sends base64(user:pass) in every request; insecure, outdated |
+| **Main Risks** | MITM, no brute-force defense, CSRF vulnerable |
+| **Security Advice** | Use secure auth methods with proper session handling, rate limits, MFA |
+
+In old servers, each request sends username & password for even getting some static content from the website. By MITM attacks we can get the credentials and use it in other login panels.
