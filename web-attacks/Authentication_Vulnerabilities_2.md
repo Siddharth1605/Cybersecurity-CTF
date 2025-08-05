@@ -49,3 +49,30 @@ Attacker and victim, share same webpage with xss vulnerability. Each user have s
 ```
 
 When victim go through this attack, his cookie will be stored in attacker’s server.
+
+
+### **Lab: Password reset broken logic**
+
+Can login with known credentials
+
+Then give password reset - in your account, you’ll get email. 
+
+In that email update new and confirm password and send it to burp intruder.
+
+Websites might have temp-password-code in the previous request, and in this request.
+
+And also send temp-password-code as parameter, some misconfigured servers only check the given temp-password-code and parameter is same, but not they contain original valid codes.
+
+Can use this and change the code, and provide victim username and desired password.
+
+### **Lab: Password reset poisoning via middleware**
+
+If the url for password reset is generating dynamically, this is also vulnerable. As some attacker can steal the victim-specific url and change their password .
+
+lab:
+
+Can login with known credentials
+
+Then give password reset - in your account, you’ll get email.  → In this request, origin id will be sent, and it’ll be victim’s account id. But here we can add X-Forwarded-Host and given our exploit server’s id
+
+Then link will go to victim, but once he clicks that link → cookie along with next request will come to attacker’s server which is passed as X-Forwarded-Host
