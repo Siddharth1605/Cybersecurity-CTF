@@ -76,3 +76,12 @@ Can login with known credentials
 Then give password reset - in your account, you’ll get email.  → In this request, origin id will be sent, and it’ll be victim’s account id. But here we can add X-Forwarded-Host and given our exploit server’s id
 
 Then link will go to victim, but once he clicks that link → cookie along with next request will come to attacker’s server which is passed as X-Forwarded-Host
+
+
+## **Lab: Password brute-force via password change**
+
+while password resetting in current ac → username, current pw, new password1, confirm password1 will go as request.
+
+If new password and confirm password are different and current pw is correct - “New passwords dont match” error will occur
+
+IF new password and confirm password are different and current pw is incorrect - “Current password is incorrect” error will occur, by this we can brute force current pw
