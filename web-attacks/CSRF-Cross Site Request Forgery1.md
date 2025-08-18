@@ -50,3 +50,19 @@ When csrf token is implemented properly, then attacker wont have a chance to mak
 ## Common flaws in CSRF Token:
 
 Websites mostly validate csrf tokens only on POST method and not on GET method.
+
+### **Lab: CSRF where token validation depends on request method**
+
+Change email
+
+Pass that post-request to repeater and analyse. 
+
+You can able to change POST to GET and do the required action.
+
+Now remove the csrf token and see it’ll still works.
+
+Generate csrf-script and paste in exploit script, victim will see the post with auto-submit payloa
+
+## **Validation of CSRF token depends on token being present**
+
+Some applications correctly validate the token when it is present but skip the validation if the token is omitted.
