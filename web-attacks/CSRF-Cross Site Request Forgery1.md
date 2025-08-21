@@ -66,3 +66,21 @@ Generate csrf-script and paste in exploit script, victim will see the post with 
 ## **Validation of CSRF token depends on token being present**
 
 Some applications correctly validate the token when it is present but skip the validation if the token is omitted.
+
+## **Lab: CSRF where token is not tied to user session**
+
+Some servers just check token is valid or not, not check whether this token is for this session.
+
+Put csrf token of one account, fetch if from inspecting and put it in another account, (each csrf token only one time).
+
+Generate csrf code before using that csrf token and put it in exploit server
+
+## Testing CSRF :
+
+Remove csrf token and check whether you get proper response
+
+Change method type like GET to POST.
+
+See if csrf token is validating
+
+See if csrf token is tied to session
